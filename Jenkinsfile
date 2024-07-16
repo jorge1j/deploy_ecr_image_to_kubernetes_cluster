@@ -13,46 +13,46 @@ pipeline{
 		
  			}
          } 
-	    stage('RunSCAAnalysisUsingSnyk') {
-            steps {		
-				withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
-					sh 'mvn snyk:test -fn'
-				}
-			}
-    }	
-        stage('Build'){
-            steps{
-                withDockerRegistry(
-                    [credentialsId:"dockerlogin", url: ""]
-                )  {
-                    script{
-                    app = docker.build("asg")
-                    }
-                }
-            }
-        }
+	  //   stage('RunSCAAnalysisUsingSnyk') {
+   //          steps {		
+			// 	withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
+			// 		sh 'mvn snyk:test -fn'
+			// 	}
+			// }
+   //  }	
+   //      stage('Build'){
+   //          steps{
+   //              withDockerRegistry(
+   //                  [credentialsId:"dockerlogin", url: ""]
+   //              )  {
+   //                  script{
+   //                  app = docker.build("asg")
+   //                  }
+   //              }
+   //          }
+   //      }
 
-        stage('Push'){
-            steps{
-                script{
-                    docker.withRegistry("https://924338258393.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:aws-credentials"){
-                        app.push("latest")
-                    }
+   //      stage('Push'){
+   //          steps{
+   //              script{
+   //                  docker.withRegistry("https://924338258393.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:aws-credentials"){
+   //                      app.push("latest")
+   //                  }
                     
                     
-                }
-            }
-        }
+   //              }
+   //          }
+   //      }
 
     
-     stage('Kubernetes Deployment of Easy Buggy Web Application') {
-	   steps {
-	      withKubeConfig([credentialsId: 'kubelogin']) {
-		  sh('kubectl delete all --all -n devsecops')
-		  sh ('kubectl apply -f deployment.yaml --namespace=devsecops')
-		    }
-	      }
-        	}
+   //   stage('Kubernetes Deployment of Easy Buggy Web Application') {
+	  //  steps {
+	  //     withKubeConfig([credentialsId: 'kubelogin']) {
+		 //  sh('kubectl delete all --all -n devsecops')
+		 //  sh ('kubectl apply -f deployment.yaml --namespace=devsecops')
+		 //    }
+	  //     }
+   //      	}
     
      }    
     
